@@ -1,10 +1,9 @@
 
 from importlib.metadata import version as get_version
 from logging import Logger, getLogger
-from unicodedata import name
 
 from fastapi import FastAPI
-from fastapi_rest_mdb.app.logger import config_logger
+from fastapi_rest_mdb.app.logger import config_logger, new_logger
 
 from fastapi_rest_mdb.app.settings import Settings
 
@@ -14,11 +13,21 @@ class App:
         """
         it initializes a fastAPI app
         """
-        self._logger = getLogger(self.package())
-        config_logger(self._logger, settings.loglevel)
+        self._settings = settings
+        self._logger = new_logger(self.package(), settings.loglevel)
         self._app = FastAPI(
             debug=settings.is_debug,
             name=self.package())
+
+    def _init_logger(self) -> Logger:
+        logger = getLogger(self.package())
+        config_logger(logger, self._settings.loglevel)
+        logger.info("initialized!", extra={'props': {'yay': 'yes'}})
+        return logger
+
+    @property
+    def app(self) -> FastAPI:
+        return self._app
 
     @classmethod
     def version(cls) -> str:
