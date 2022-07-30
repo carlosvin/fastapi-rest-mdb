@@ -8,6 +8,9 @@ from fastapi_rest_mdb.app.logger import config_logger, new_logger
 from fastapi_rest_mdb.app.settings import Settings
 
 class App:
+    """
+    it initializes the FastAPI app, routes, middlewares, logging...
+    """
 
     def __init__(self, settings: Settings) -> None:
         """
