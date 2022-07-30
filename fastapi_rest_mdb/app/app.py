@@ -3,7 +3,7 @@ from importlib.metadata import version as get_version
 from logging import Logger, getLogger
 
 from fastapi import FastAPI
-from fastapi_rest_mdb.app.logger import config_logger, new_logger
+from fastapi_rest_mdb.app.logger import config_logger, config_uvicorn_loggers, new_logger
 
 from fastapi_rest_mdb.app.settings import Settings
 
@@ -18,6 +18,7 @@ class App:
         """
         self._settings = settings
         self._logger = new_logger(self.package(), settings.loglevel)
+        # config_uvicorn_loggers(settings.loglevel)
         self._app = FastAPI(
             debug=settings.is_debug,
             name=self.package())
