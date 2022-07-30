@@ -12,7 +12,7 @@ def config_logger(logger: Logger, level: str) -> Logger:
     else:
         log_handler = StreamHandler()
         logger.addHandler(log_handler)
-    formatter = jsonlogger.JsonFormatter(timestamp=True)
+    formatter = jsonlogger.JsonFormatter("%(levelname)s %(module)s %(filename)s %(lineno)s %(message)s %(threadName)s", timestamp=True)
     log_handler.setFormatter(formatter)
     return logger
 
