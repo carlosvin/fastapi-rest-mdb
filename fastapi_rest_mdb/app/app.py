@@ -1,14 +1,13 @@
-
 from importlib.metadata import version as get_version
 from logging import getLogger
 
 from fastapi import FastAPI
 from fastapi_rest_mdb import api_v1
-from fastapi_rest_mdb.api_v1 import exception_handlers
-from fastapi_rest_mdb.api_v1.middlewares import register_middlewares
+from fastapi_rest_mdb.app import exception_handlers, middlewares
 from fastapi_rest_mdb.app.logger import config_loggers
 
 from fastapi_rest_mdb.app.settings import Settings
+
 
 class App:
     """
@@ -26,15 +25,16 @@ class App:
             self.package(),
             "uvicorn.access",
             "uvicorn.error",
-            "fastapi")
+            "fastapi",
+        )
 
         self._app = FastAPI(
             debug=settings.is_debug,
             name=self.package(),
-            version=self.version(), 
+            version=self.version(),
         )
-        self._app.include_router(api_v1.router)
-        register_middlewares(self._app)
+        api_v1.register(self._app)
+        middlewares.register(self._app)
         exception_handlers.register(self._app, self._logger)
 
     @property
@@ -45,8 +45,8 @@ class App:
     def version(cls) -> str:
         """returns app version as defined in toml config"""
         return get_version(cls.package())
-    
+
     @classmethod
     def package(cls) -> str:
         """returns main package name"""
-        return __name__.split('.', maxsplit=1)[0]
+        return __name__.split(".", maxsplit=1)[0]

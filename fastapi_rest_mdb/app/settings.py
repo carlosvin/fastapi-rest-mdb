@@ -1,9 +1,10 @@
-
 import logging
 from typing import Optional
 from pydantic import AnyUrl, BaseSettings
 
-DEBUG_LEVEL = 'DEBUG'
+DEBUG_LEVEL = "DEBUG"
+
+
 class Settings(BaseSettings):
 
     loglevel: str = DEBUG_LEVEL

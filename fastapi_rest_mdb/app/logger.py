@@ -1,5 +1,3 @@
-
-
 from logging import Logger, StreamHandler, getLogger
 from pythonjsonlogger import jsonlogger
 
@@ -14,7 +12,8 @@ def config_logger(logger: Logger, level: str) -> Logger:
     formatter = jsonlogger.JsonFormatter(
         "%(levelname)s %(module)s %(filename)s %(lineno)s %(message)s %(threadName)s",
         timestamp=True,
-        static_fields={'log': logger.name})
+        static_fields={"log": logger.name},
+    )
     log_handler.setFormatter(formatter)
     return logger
 
