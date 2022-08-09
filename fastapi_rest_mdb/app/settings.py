@@ -1,15 +1,11 @@
-import logging
-from typing import Optional
-from pydantic import AnyUrl, BaseSettings
+from pydantic import BaseSettings
 
 DEBUG_LEVEL = "DEBUG"
 
 
-class Settings(BaseSettings):
+class AppSettings(BaseSettings):
 
     loglevel: str = DEBUG_LEVEL
-    mongodb_uri: Optional[AnyUrl]
-    mongodb_name: Optional[str]
 
     @property
     def is_debug(self) -> bool:
