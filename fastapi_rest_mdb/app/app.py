@@ -1,5 +1,5 @@
 from importlib.metadata import version as get_version
-from logging import getLogger
+from logging import Logger, getLogger
 
 from fastapi import FastAPI
 from fastapi_rest_mdb import api_v1
@@ -18,9 +18,14 @@ class App:
         """
         it initializes a fastAPI app
         """
-        self._db = db
         self._settings = settings
-        self._logger = getLogger(self.package())
+        self._app = FastAPI(
+            debug=settings.is_debug,
+            name=self.package(),
+            version=self.version(),
+        )
+        self._app.state.logger = getLogger(self.package())
+        self._app.state.db = db
         config_loggers(
             settings.loglevel,
             self.package(),
@@ -28,20 +33,18 @@ class App:
             "uvicorn.error",
             "fastapi",
         )
-
-        self._app = FastAPI(
-            debug=settings.is_debug,
-            name=self.package(),
-            version=self.version(),
-        )
         api_v1.register(self._app)
         middlewares.register(self._app)
-        exception_handlers.register(self._app, self._logger)
+        exception_handlers.register(self._app)
 
 
     @property
     def app(self) -> FastAPI:
         return self._app
+
+    @property
+    def logger(self) -> Logger:
+        return self._app.state.logger
 
     @classmethod
     def version(cls) -> str:

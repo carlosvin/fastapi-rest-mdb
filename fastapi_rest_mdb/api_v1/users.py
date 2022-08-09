@@ -31,3 +31,7 @@ async def read_user_me():
 @router.get("/{username}", tags=["users"])
 async def read_user(username: str):
     return {"username": username}
+
+@router.get("/id/{username}", tags=["users"])
+async def read_id_user(username: int):
+    return {"username": username}
