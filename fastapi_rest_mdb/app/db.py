@@ -15,7 +15,3 @@ class DbSettings(BaseSettings):
     @property
     def db(self) -> AsyncIOMotorDatabase:
         return AsyncIOMotorClient(self.mongodb_uri)[self.mongodb_name]
-
-
-def get_db() -> AsyncIOMotorDatabase:
-    return DbSettings().db

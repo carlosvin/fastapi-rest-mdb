@@ -1,15 +1,11 @@
-from fastapi import APIRouter, Depends
-from fastapi_rest_mdb.app.db import get_db
-
+from fastapi import APIRouter, Depends, Request
 from fastapi_rest_mdb.logics.user_logic import UserLogic
-
-from motor.motor_asyncio import AsyncIOMotorDatabase
 
 router = APIRouter(prefix="/users")
 
 
-def _get_user_logic(db: AsyncIOMotorDatabase = Depends(get_db)) -> UserLogic:
-    return UserLogic(db)
+def _get_user_logic(request: Request) -> UserLogic:
+    return UserLogic(request.app.state.db)
 
 
 @router.get("/", tags=["users"])
@@ -31,6 +27,7 @@ async def read_user_me():
 @router.get("/{username}", tags=["users"])
 async def read_user(username: str):
     return {"username": username}
+
 
 @router.get("/id/{username}", tags=["users"])
 async def read_id_user(username: int):
