@@ -9,6 +9,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from fastapi_rest_mdb.app.settings import AppSettings
 
+
 class App:
     """
     it initializes the FastAPI app, routes, middlewares, logging...
@@ -36,7 +37,6 @@ class App:
         api_v1.register(self._app)
         middlewares.register(self._app)
         exception_handlers.register(self._app)
-
 
     @property
     def app(self) -> FastAPI:

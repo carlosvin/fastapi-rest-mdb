@@ -9,6 +9,6 @@ async def _validation_exception_handler(request, exc):
     request.app.state.logger.error(f"OMG! The client sent invalid data!: {exc}")
     return await request_validation_exception_handler(request, exc)
 
+
 def register(app: FastAPI) -> None:
     app.add_exception_handler(RequestValidationError, _validation_exception_handler)
-    

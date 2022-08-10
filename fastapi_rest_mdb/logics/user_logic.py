@@ -1,14 +1,15 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
 from pydantic import BaseModel
 
+
 class UserModel(BaseModel):
 
-    usermame: str
+    username: str
+    is_admin: Optional[bool] = False
 
-    
+
 class UserLogic:
-
     def __init__(self, db: AsyncIOMotorDatabase) -> None:
         self._collection: AsyncIOMotorCollection = db.users
 
@@ -16,6 +17,5 @@ class UserLogic:
         async for doc in self._collection.find({}):
             yield UserModel(**doc)
 
-    async def new(self, username) -> None:
-        model = UserModel(usermame=username)
-        self._collection.insert_one(model.dict())
+    async def new(self, user_model: UserModel) -> None:
+        await self._collection.insert_one(user_model.dict())
