@@ -1,21 +1,21 @@
-from logging import Logger, StreamHandler, getLogger
-from pythonjsonlogger import jsonlogger
+import structlog
+import logging
+from structlog.processors import JSONRenderer
 
-
-def config_logger(logger: Logger, level: str) -> Logger:
-    logger.setLevel(level)
-    if not logger.hasHandlers():
-        logger.addHandler(StreamHandler())
-    formatter = jsonlogger.JsonFormatter(
-        "%(levelname)s %(module)s %(filename)s %(lineno)s %(message)s %(threadName)s",
-        timestamp=True,
-        static_fields={"log": logger.name},
+def config_logger(level: str) -> logging.Logger:
+    int_level = logging.getLevelName(level)
+    structlog.configure(
+        processors=[
+            structlog.contextvars.merge_contextvars,
+            structlog.processors.add_log_level,
+            structlog.processors.StackInfoRenderer(),
+            structlog.dev.set_exc_info,
+            structlog.processors.TimeStamper(),
+            JSONRenderer(indent=1, sort_keys=True)
+        ],
+        wrapper_class=structlog.make_filtering_bound_logger(int_level),
+        context_class=dict,
+        logger_factory=structlog.PrintLoggerFactory(),
+        cache_logger_on_first_use=False
     )
-    for log_handler in logger.handlers:
-        log_handler.setFormatter(formatter)
-    return logger
-
-
-def config_loggers(level: str, *logger_names) -> None:
-    for logger_name in logger_names:
-        config_logger(getLogger(logger_name), level)
+    structlog.get_logger().info('Hello')

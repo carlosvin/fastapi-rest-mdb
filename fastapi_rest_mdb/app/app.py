@@ -4,8 +4,8 @@ from logging import Logger, getLogger
 from fastapi import FastAPI
 from fastapi_rest_mdb import api_v1
 from fastapi_rest_mdb.app import exception_handlers, middlewares
-from fastapi_rest_mdb.app.logger import config_loggers
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from fastapi_rest_mdb.app.logger import config_logger
 
 from fastapi_rest_mdb.app.settings import AppSettings
 
@@ -20,13 +20,14 @@ class App:
         it initializes a fastAPI app
         """
         self._settings = settings
-        config_loggers(
+        config_logger(settings.loglevel)
+        """config_loggers(
             settings.loglevel,
             self.package(),
             "uvicorn.access",
             "uvicorn.error",
             "fastapi",
-        )
+        )"""
         self._app = FastAPI(
             debug=settings.is_debug,
             name=self.package(),

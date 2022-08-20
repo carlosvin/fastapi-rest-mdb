@@ -1,18 +1,20 @@
-from logging import Logger
+from structlog import get_logger
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Request
 from fastapi_rest_mdb.logics.user_logic import UserLogic, UserModel
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/users")
+logger = get_logger()
+
+def _log_req(req: Request):
+    logger.info('req', method=req.method, url=req.url)
+
+
+router = APIRouter(prefix="/users", dependencies=[Depends(_log_req)])
 
 
 def _get_user_logic(request: Request) -> UserLogic:
     return UserLogic(request.app.state.db)
-
-
-def _get_logger(request: Request) -> Logger:
-    return request.app.state.logger
 
 
 class UserResponse(BaseModel):
@@ -29,12 +31,11 @@ class UserRequest(BaseModel):
 @router.get("/", tags=["users"], response_model=List[UserResponse])
 async def read_users(
     user_logic: UserLogic = Depends(_get_user_logic),
-    logger: Logger = Depends(_get_logger),
 ):
     async for model in user_logic.all():
         logger.info(model)
     resp = [model.dict() async for model in user_logic.all()]
-    logger.info(resp)
+    logger.info('resp', resp=resp)
     return resp
 
 
@@ -42,7 +43,6 @@ async def read_users(
 async def new_user(
     user_request: UserRequest,
     user_logic: UserLogic = Depends(_get_user_logic),
-    logger: Logger = Depends(_get_logger),
 ):
     logger.info(user_request.dict())
     await user_logic.new(UserModel(**user_request.dict()))

@@ -783,6 +783,19 @@ python-versions = ">=3.8"
 pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 
 [[package]]
+name = "structlog"
+version = "22.1.0"
+description = "Structured Logging for Python"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+tests = ["simplejson", "pytest (>=6.0)", "pytest-asyncio (>=0.17)", "pretend", "freezegun (>=0.2.8)", "coverage"]
+docs = ["twisted", "sphinxcontrib-mermaid", "sphinx-notfound-page", "sphinx", "myst-parser", "furo"]
+dev = ["twisted", "sphinxcontrib-mermaid", "sphinx-notfound-page", "sphinx", "myst-parser", "furo", "simplejson", "pytest (>=6.0)", "pytest-asyncio (>=0.17)", "pretend", "freezegun (>=0.2.8)", "coverage", "tomli", "cogapp", "rich", "pre-commit"]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -914,7 +927,7 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "077c8e3115d6766384f87b33adf72ff48a0c4f86c14ad089681ea9c739c8614d"
+content-hash = "571f1dab1d50267a1a1565d71a54cd9d3eebf8c59f16806d97357b8fe61065ca"
 
 [metadata.files]
 anyio = []
@@ -1110,6 +1123,7 @@ snowballstemmer = [
 ]
 starlette = []
 stevedore = []
+structlog = []
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
