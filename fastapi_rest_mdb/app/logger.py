@@ -4,17 +4,15 @@ from pythonjsonlogger import jsonlogger
 
 def config_logger(logger: Logger, level: str) -> Logger:
     logger.setLevel(level)
-    if logger.handlers:
-        log_handler = logger.handlers[0]
-    else:
-        log_handler = StreamHandler()
-        logger.addHandler(log_handler)
+    if not logger.hasHandlers():
+        logger.addHandler(StreamHandler())
     formatter = jsonlogger.JsonFormatter(
         "%(levelname)s %(module)s %(filename)s %(lineno)s %(message)s %(threadName)s",
         timestamp=True,
         static_fields={"log": logger.name},
     )
-    log_handler.setFormatter(formatter)
+    for log_handler in logger.handlers:
+        log_handler.setFormatter(formatter)
     return logger
 
 
